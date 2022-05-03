@@ -1,0 +1,40 @@
+version: '3.3'
+
+services:
+    wordpress:
+        image: wordpress
+        restart: always
+        ports:
+            - 8080:80
+        environment:
+            WORDPRESS_DB_HOST: db
+            WORDPRESS_DB_USER: admin
+            WORDPRESS_DB_PASSWORD: admin
+            WORDPRESS_DB_NAME: wpdb
+        volumes:
+            - ./wp-content:/var/www/html/wp-content
+
+    db:
+        image: mysql
+        restart: always
+        environment: 
+            MYSQL_DATABASE: wpdb
+            MYSQL_USER: admin
+            MYSQL_PASSWORD: admin
+            MYSQL_RANDOM_ROOT_PASSWORD: '1' 
+        volumes:
+            - db:/var/lib/mysql
+
+    adminer:
+        depends_on:
+            - db
+        image: adminer
+        restart: always
+        ports:
+            - 8888:8080
+
+networks:
+    back:
+
+volumes:
+    db:
